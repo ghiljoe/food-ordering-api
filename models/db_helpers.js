@@ -1,12 +1,10 @@
 const knex = require('knex');
 const config = require('../knexfile');
 const db = knex(config.development);
-const Promise = require('bluebird');
-const Order = require('../models/Order');
+const Order = require('../models/order');
 const OrderItem = require('../models/order_item');
 const MenuCategoryItem = require('../models/menu_category_item');
 const { Model } = require('objection');
-const bigdecimal = require("bigdecimal");
 
 Model.knex(db);
 
