@@ -56,19 +56,19 @@ async function getCategoryItems(id) {
 
 async function saveOrder(input) {
     const { userId, totalAmount, items } = input;
-    
+    console.log(items);
     try {
         const order = await Order.query().insertAndFetch({
             user_id: userId,
             total_amount: totalAmount,
         });
         if (order) {
-            items && items.map(async ({ id, item_count, price }) =>
+            items && items.map(async ({ id, item_count, price, tax }) =>
                 await OrderItem.query().insert({
                         order_id: order.id,
                         menu_category_item_id: id,
                         quantity: item_count,
-                        total_price: price * item_count,
+                        total_price: Math.round((parseFloat(price) * item_count) * (1 + tax)),
                     })
                 );
         }
@@ -86,7 +86,11 @@ async function getOrder(id) {
         .join('menu_category_item', 'order_item.menu_category_item_id', 'menu_category_item.id')
         .where({ order_id: id });
 
-    return orderItems;
+    const orderItemsMap = orderItems.map((data) => ({
+        ...data,
+        total_price: data.total_price.toFixed(2),
+    }));
+    return orderItemsMap;
 }
 
 module.exports = {
