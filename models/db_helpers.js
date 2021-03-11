@@ -56,7 +56,6 @@ async function getCategoryItems(id) {
 
 async function saveOrder(input) {
     const { userId, totalAmount, items } = input;
-    console.log(items);
     try {
         const order = await Order.query().insertAndFetch({
             user_id: userId,
