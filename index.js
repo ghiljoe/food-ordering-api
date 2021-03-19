@@ -35,10 +35,10 @@ app.post('/api/create-menu-category-item',jsonParser, (req, res) => {
 
 app.post('/api/create-user',jsonParser, (req, res) => {
     addUser(req.body).then(user => {
-        res.status(200).json({ message: 'User successfully added.' });
+        res.status(200).json(user);
     }).catch(error => {
         console.log(error);
-        res.status(500).json({ message: 'Error adding user'});
+        res.status(500).json({ message: error.message, success: false });
     })
 })
 

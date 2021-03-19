@@ -4,6 +4,7 @@ const db = knex(config.development);
 const Order = require('../models/order');
 const OrderItem = require('../models/order_item');
 const MenuCategoryItem = require('../models/menu_category_item');
+const User = require('../models/user');
 const { Model } = require('objection');
 
 Model.knex(db);
@@ -18,7 +19,12 @@ async function authenticateUser(input) {
 }
 
 async function addUser(input) {
-    return await db('user').insert(input);
+    const checkUser = await User.query().findOne({ email: input.email });
+    if (checkUser) {
+        throw new Error('Email already exist!');
+    }
+    const user = await User.query().insertAndFetch(input);
+    return user;
 }
 
 async function addMenuCategory(input) {
